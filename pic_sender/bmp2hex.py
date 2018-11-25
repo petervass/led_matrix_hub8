@@ -1,10 +1,11 @@
 import sys
 import time
+
 import numpy as np
 from PIL import Image
 
 TRUE_THRESHOLD = 5
-
+SERIAL_DEV = '/dev/ttyUSB0'
 
 def nparray2bytearray(nparr):
     pow2 = [2**i for i in range(7, -1, -1)]
@@ -30,6 +31,8 @@ def img2bytearray(img):
 def gif_loop(img):
     frame_dur_sec = img.info['duration'] / 1000.0
 
+        
+    
     frames = []
 
     stop = False
@@ -63,13 +66,18 @@ def bytearray2cdef(barr, var_name, max_width=75):
 
 def serial_send_barr(npbarr):
     import serial
-
-    ser = serial.Serial('/dev/ttyUSB0', baudrate=115200,
-                        stopbits=serial.STOPBITS_ONE,
-                        bytesize=serial.EIGHTBITS,
-                        parity=serial.PARITY_NONE,
-                        timeout=1
-                        )
+    
+    
+    try:
+        ser = serial.Serial(SERIAL_DEV, baudrate=115200,
+                            stopbits=serial.STOPBITS_ONE,
+                            bytesize=serial.EIGHTBITS,
+                            parity=serial.PARITY_NONE,
+                            timeout=1
+                            )
+    except serial.SerialException:
+        sys.stdout.write('\nERROR, could not open serial device %s.\n' % SERIAL_DEV)
+        sys.exit()
 
     barr = bytearray(npbarr)
 
