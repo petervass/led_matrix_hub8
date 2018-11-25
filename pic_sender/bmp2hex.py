@@ -4,11 +4,13 @@ import time
 import numpy as np
 from PIL import Image
 
-TRUE_THRESHOLD = 5
+TRUE_THRESHOLD = 5 # inenzitas ertek ami folott az adott pixel bekapcsoljon
 SERIAL_DEV = '/dev/ttyUSB0'
 
+
+# kep konvertalasa python bytearray-be, bitek osszevonasa byteba
 def nparray2bytearray(nparr):
-    pow2 = [2**i for i in range(7, -1, -1)]
+    pow2 = [2**i for i in range(7, -1, -1)] # byte helyertekei bitcsomagolashoz
 
     ret = np.zeros(nparr.size / 8, dtype='uint8')
 
@@ -20,19 +22,17 @@ def nparray2bytearray(nparr):
 
     return ret
 
-
+# kep konvertalasa numpy uint8 array-be
 def img2bytearray(img):
     img = img.convert('L')  # to grayscale
     img = np.array(img)
 
     return nparray2bytearray(img)
 
-
+# vegtelen ciklus GIF animacio megjelenitesere
 def gif_loop(img):
     frame_dur_sec = img.info['duration'] / 1000.0
 
-        
-    
     frames = []
 
     stop = False
@@ -54,7 +54,7 @@ def gif_loop(img):
 
         time.sleep(frame_dur_sec)
 
-
+# bytearray C definiciojanak kiirasa
 def bytearray2cdef(barr, var_name, max_width=75):
     hex_fmt = {'int': lambda x: '%#04x' % x}
 
@@ -63,7 +63,7 @@ def bytearray2cdef(barr, var_name, max_width=75):
 
     return 'uint8_t %s[%d] = {\n %s}; ' % (var_name, barr.size, str_out[1:-1])
 
-
+# bytearray kuldese serial-on
 def serial_send_barr(npbarr):
     import serial
     

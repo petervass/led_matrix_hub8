@@ -1,7 +1,7 @@
 /*
  * periph_init.h
  *
- *  Created on: Nov 22, 2018
+ *  Created on: Nov 19, 2018
  *      Author: vass
  */
 
@@ -16,31 +16,40 @@
 
 #include "stm32f1xx_it.h" /* systick isr */
 
+
+/* sorkiválasztó lábak */
 #define PIN_LA 	GPIO_Pin_0
 #define PIN_LB 	GPIO_Pin_1
 #define PIN_LC 	GPIO_Pin_2
 #define PIN_LD 	GPIO_Pin_3
 #define PORT_LX GPIOA
 
-
+/* mátrix adat bemenete */
 #define PIN_R1 	GPIO_Pin_7
 #define PORT_R1 GPIOA /* used as MOSI */
 
+/* mátrix clock bemenete */
 #define PIN_CLK GPIO_Pin_5
 #define PORT_CLK GPIOA /* used as SCK */
 
+/* latch bemenet */
 #define PIN_LAT GPIO_Pin_0
 #define PORT_LAT GPIOB
 
+/* engedélyező bemenet */
 #define PIN_EN 	GPIO_Pin_1
 #define PORT_EN GPIOB
 
+/*
 #define PIN_EN_PWM GPIO_Pin_6
 #define PORT_EN_PWM GPIOB
+*/
 
+/* 16x64 pixel */
 #define H 16
 #define W 64
 
+/* dupla buffer számítógépes adatok fogadásához */
 #define USART1_DMA_BUF_LEN (H*W/8*2)
 
 extern __IO uint8_t usartBuf[];

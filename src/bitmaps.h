@@ -5,6 +5,9 @@
  *      Author: vass
  */
 
+
+/* flash-ben tárolt statikus képek bmp2hex.py által generálva */
+
 #include <stdint.h>
 
 #ifndef BITMAPS_H_

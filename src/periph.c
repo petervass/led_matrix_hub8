@@ -1,13 +1,13 @@
 /*
  * periph_init.c
  *
- *  Created on: Nov 22, 2018
+ *  Created on: Nov 19, 2018
  *      Author: vass
  */
 #include <periph.h>
 
 void MySysInit(void){
-	SystemInit();
+	SystemInit(); /* órajel beállítások */
 	SystemCoreClockUpdate();
 
 
@@ -16,11 +16,11 @@ void MySysInit(void){
 
 	SysTick_Config(clkConfStruct.SYSCLK_Frequency/1000-1); /* 1ms/SysClk tick */
 
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-	NVIC_SetPriority(SysTick_IRQn, 0);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4); /* 4bit-es interrupt prioritások */
+	NVIC_SetPriority(SysTick_IRQn, 0); /* systick irq legnagyobb prioritás */
 }
 
-
+/* SPI inicializálása */
 void InitSPI(void){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
 	SPI_InitTypeDef  SPI_InitStructure;
@@ -32,7 +32,7 @@ void InitSPI(void){
 	SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;
 	SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;
 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
-	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8; /* TODO: try maximum value */
+	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8; /* legnagyobb sebesség amit bír a matrix */
 	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
 	SPI_InitStructure.SPI_CRCPolynomial = 7;
 
@@ -88,9 +88,6 @@ void InitTIM(void){
 //	OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;
 //
 //	TIM_OC1Init(TIM4,&OCInitStruct);
-
-
-
 }
 
 
@@ -120,7 +117,7 @@ void InitGPIO(void){
 	GPIOInitStruct.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_Init(GPIOB, &GPIOInitStruct);
 
-	GPIOInitStruct.GPIO_Pin = PIN_LA  | PIN_LB | PIN_LC | PIN_LD ; /* half GPIOA */
+	GPIOInitStruct.GPIO_Pin = PIN_LA  | PIN_LB | PIN_LC | PIN_LD ;
 	GPIO_Init(GPIOA, &GPIOInitStruct);
 
 
@@ -158,7 +155,7 @@ void InitUSART1(void){
 	USART_Init(USART1, &USARTInitStruct);
 
 
-	USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE); /* Enable USART1 DMA Rx and TX request */
+	USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE); /* Enable USART1 DMA Rx request */
 	USART_Cmd(USART1, ENABLE); /* Enable USART1 */
 }
 
@@ -184,7 +181,7 @@ void InitDMA(void){
 	DMAInitStruct.DMA_MemoryInc = DMA_MemoryInc_Enable;
 	DMAInitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
 	DMAInitStruct.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
-	DMAInitStruct.DMA_Mode = DMA_Mode_Circular;
+	DMAInitStruct.DMA_Mode = DMA_Mode_Circular; /* cirkuláris dupla buffer */
 	DMAInitStruct.DMA_Priority = DMA_Priority_VeryHigh;
 	DMAInitStruct.DMA_M2M = DMA_M2M_Disable;
 
@@ -200,8 +197,8 @@ void InitDMA(void){
 
 	NVIC_Init(&nvicStructure);
 
-	DMA_ITConfig(DMA1_Channel5, DMA_IT_TC, ENABLE); /* USART1 Rx */
-	DMA_ITConfig(DMA1_Channel5, DMA_IT_HT, ENABLE); /* USART1 Rx */
+	DMA_ITConfig(DMA1_Channel5, DMA_IT_TC, ENABLE); /* USART1 Rx transer complete */
+	DMA_ITConfig(DMA1_Channel5, DMA_IT_HT, ENABLE); /* USART1 Rx half transfer complete*/
 	DMA_Cmd(DMA1_Channel5, ENABLE);
 
 

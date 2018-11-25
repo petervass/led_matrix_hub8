@@ -1,7 +1,7 @@
 /*
  * matrix_driver.h
  *
- *  Created on: Nov 22, 2018
+ *  Created on: Nov 20, 2018
  *      Author: vass
  */
 
@@ -10,6 +10,7 @@
 
 #include "periph.h"
 
+/* képernyő buffer */
 extern __IO uint8_t * rowBufPtr;
 extern __IO uint8_t rowBuf[];
 
